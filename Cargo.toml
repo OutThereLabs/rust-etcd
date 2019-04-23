@@ -1,0 +1,20 @@
+[package]
+name = "etcd"
+version = "0.1.0"
+authors = ["Patrick Tescher <patrick@outtherelabs.com>"]
+edition = "2018"
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["dylib"]
+
+[dependencies]
+grpc = "~0.6"
+protobuf = "~2.5"
+failure = "~0.1"
+futures = "~0.1"
+log = "~0.4"
+
+[build-dependencies]
+dirs = "1.0.5"
+protoc-rust-grpc = "0.6.1"

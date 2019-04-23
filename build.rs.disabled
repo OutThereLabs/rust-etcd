@@ -1,0 +1,44 @@
+extern crate dirs;
+extern crate protoc_rust_grpc;
+
+fn main() {
+    let home_dir = dirs::home_dir().expect("home directory");
+    let src_dir = home_dir.join("golang/src/github.com");
+
+    protoc_rust_grpc::run(protoc_rust_grpc::Args {
+        out_dir: "src",
+        includes: &[
+            src_dir.join("gogo/protobuf").to_str().expect("path"),
+            src_dir.join("etcd-io").to_str().expect("path"),
+            src_dir
+                .join("googleapis/googleapis")
+                .to_str()
+                .expect("path"),
+        ],
+        input: &[
+            src_dir
+                .join("etcd-io/etcd/etcdserver/etcdserverpb/etcdserver.proto")
+                .to_str()
+                .expect("path"),
+            src_dir
+                .join("etcd-io/etcd/etcdserver/api/v3lock/v3lockpb/v3lock.proto")
+                .to_str()
+                .expect("path"),
+            src_dir
+                .join("etcd-io/etcd/etcdserver/etcdserverpb/rpc.proto")
+                .to_str()
+                .expect("path"),
+            src_dir
+                .join("etcd-io/etcd/mvcc/mvccpb/kv.proto")
+                .to_str()
+                .expect("path"),
+            src_dir
+                .join("etcd-io/etcd/auth/authpb/auth.proto")
+                .to_str()
+                .expect("path"),
+        ],
+        rust_protobuf: true, // also generate protobuf messages, not just services
+        ..Default::default()
+    })
+    .expect("protoc-rust-grpc");
+}
