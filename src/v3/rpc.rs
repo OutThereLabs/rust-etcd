@@ -6041,7 +6041,6 @@ impl<'a> ::std::default::Default for &'a WatchRequest {
 pub enum WatchRequest_oneof_request_union {
     create_request(WatchCreateRequest),
     cancel_request(WatchCancelRequest),
-    progress_request(WatchProgressRequest),
 }
 
 impl WatchRequest {
@@ -6146,55 +6145,6 @@ impl WatchRequest {
             WatchCancelRequest::new()
         }
     }
-
-    // .etcdserverpb.WatchProgressRequest progress_request = 3;
-
-
-    pub fn get_progress_request(&self) -> &WatchProgressRequest {
-        match self.request_union {
-            ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(ref v)) => v,
-            _ => WatchProgressRequest::default_instance(),
-        }
-    }
-    pub fn clear_progress_request(&mut self) {
-        self.request_union = ::std::option::Option::None;
-    }
-
-    pub fn has_progress_request(&self) -> bool {
-        match self.request_union {
-            ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(..)) => true,
-            _ => false,
-        }
-    }
-
-    // Param is passed by value, moved
-    pub fn set_progress_request(&mut self, v: WatchProgressRequest) {
-        self.request_union = ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(v))
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_progress_request(&mut self) -> &mut WatchProgressRequest {
-        if let ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(_)) = self.request_union {
-        } else {
-            self.request_union = ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(WatchProgressRequest::new()));
-        }
-        match self.request_union {
-            ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(ref mut v)) => v,
-            _ => panic!(),
-        }
-    }
-
-    // Take field
-    pub fn take_progress_request(&mut self) -> WatchProgressRequest {
-        if self.has_progress_request() {
-            match self.request_union.take() {
-                ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(v)) => v,
-                _ => panic!(),
-            }
-        } else {
-            WatchProgressRequest::new()
-        }
-    }
 }
 
 impl ::protobuf::Message for WatchRequest {
@@ -6205,11 +6155,6 @@ impl ::protobuf::Message for WatchRequest {
             }
         }
         if let Some(WatchRequest_oneof_request_union::cancel_request(ref v)) = self.request_union {
-            if !v.is_initialized() {
-                return false;
-            }
-        }
-        if let Some(WatchRequest_oneof_request_union::progress_request(ref v)) = self.request_union {
             if !v.is_initialized() {
                 return false;
             }
@@ -6233,12 +6178,6 @@ impl ::protobuf::Message for WatchRequest {
                     }
                     self.request_union = ::std::option::Option::Some(WatchRequest_oneof_request_union::cancel_request(is.read_message()?));
                 },
-                3 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.request_union = ::std::option::Option::Some(WatchRequest_oneof_request_union::progress_request(is.read_message()?));
-                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -6261,10 +6200,6 @@ impl ::protobuf::Message for WatchRequest {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
-                &WatchRequest_oneof_request_union::progress_request(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
             };
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
@@ -6282,11 +6217,6 @@ impl ::protobuf::Message for WatchRequest {
                 },
                 &WatchRequest_oneof_request_union::cancel_request(ref v) => {
                     os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
-                &WatchRequest_oneof_request_union::progress_request(ref v) => {
-                    os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -6344,11 +6274,6 @@ impl ::protobuf::Message for WatchRequest {
                     WatchRequest::has_cancel_request,
                     WatchRequest::get_cancel_request,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, WatchProgressRequest>(
-                    "progress_request",
-                    WatchRequest::has_progress_request,
-                    WatchRequest::get_progress_request,
-                ));
                 ::protobuf::reflect::MessageDescriptor::new::<WatchRequest>(
                     "WatchRequest",
                     fields,
@@ -6371,7 +6296,6 @@ impl ::protobuf::Message for WatchRequest {
 
 impl ::protobuf::Clear for WatchRequest {
     fn clear(&mut self) {
-        self.request_union = ::std::option::Option::None;
         self.request_union = ::std::option::Option::None;
         self.request_union = ::std::option::Option::None;
         self.unknown_fields.clear();
@@ -6399,8 +6323,6 @@ pub struct WatchCreateRequest {
     pub progress_notify: bool,
     pub filters: ::std::vec::Vec<WatchCreateRequest_FilterType>,
     pub prev_kv: bool,
-    pub watch_id: i64,
-    pub fragment: bool,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -6538,36 +6460,6 @@ impl WatchCreateRequest {
     pub fn set_prev_kv(&mut self, v: bool) {
         self.prev_kv = v;
     }
-
-    // int64 watch_id = 7;
-
-
-    pub fn get_watch_id(&self) -> i64 {
-        self.watch_id
-    }
-    pub fn clear_watch_id(&mut self) {
-        self.watch_id = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_watch_id(&mut self, v: i64) {
-        self.watch_id = v;
-    }
-
-    // bool fragment = 8;
-
-
-    pub fn get_fragment(&self) -> bool {
-        self.fragment
-    }
-    pub fn clear_fragment(&mut self) {
-        self.fragment = false;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_fragment(&mut self, v: bool) {
-        self.fragment = v;
-    }
 }
 
 impl ::protobuf::Message for WatchCreateRequest {
@@ -6609,20 +6501,6 @@ impl ::protobuf::Message for WatchCreateRequest {
                     let tmp = is.read_bool()?;
                     self.prev_kv = tmp;
                 },
-                7 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_int64()?;
-                    self.watch_id = tmp;
-                },
-                8 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_bool()?;
-                    self.fragment = tmp;
-                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -6653,12 +6531,6 @@ impl ::protobuf::Message for WatchCreateRequest {
         if self.prev_kv != false {
             my_size += 2;
         }
-        if self.watch_id != 0 {
-            my_size += ::protobuf::rt::value_size(7, self.watch_id, ::protobuf::wire_format::WireTypeVarint);
-        }
-        if self.fragment != false {
-            my_size += 2;
-        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -6682,12 +6554,6 @@ impl ::protobuf::Message for WatchCreateRequest {
         };
         if self.prev_kv != false {
             os.write_bool(6, self.prev_kv)?;
-        }
-        if self.watch_id != 0 {
-            os.write_int64(7, self.watch_id)?;
-        }
-        if self.fragment != false {
-            os.write_bool(8, self.fragment)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -6761,16 +6627,6 @@ impl ::protobuf::Message for WatchCreateRequest {
                     |m: &WatchCreateRequest| { &m.prev_kv },
                     |m: &mut WatchCreateRequest| { &mut m.prev_kv },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
-                    "watch_id",
-                    |m: &WatchCreateRequest| { &m.watch_id },
-                    |m: &mut WatchCreateRequest| { &mut m.watch_id },
-                ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
-                    "fragment",
-                    |m: &WatchCreateRequest| { &m.fragment },
-                    |m: &mut WatchCreateRequest| { &mut m.fragment },
-                ));
                 ::protobuf::reflect::MessageDescriptor::new::<WatchCreateRequest>(
                     "WatchCreateRequest",
                     fields,
@@ -6799,8 +6655,6 @@ impl ::protobuf::Clear for WatchCreateRequest {
         self.progress_notify = false;
         self.filters.clear();
         self.prev_kv = false;
-        self.watch_id = 0;
-        self.fragment = false;
         self.unknown_fields.clear();
     }
 }
@@ -7035,132 +6889,6 @@ impl ::protobuf::reflect::ProtobufValue for WatchCancelRequest {
 }
 
 #[derive(PartialEq,Clone,Default)]
-pub struct WatchProgressRequest {
-    // special fields
-    pub unknown_fields: ::protobuf::UnknownFields,
-    pub cached_size: ::protobuf::CachedSize,
-}
-
-impl<'a> ::std::default::Default for &'a WatchProgressRequest {
-    fn default() -> &'a WatchProgressRequest {
-        <WatchProgressRequest as ::protobuf::Message>::default_instance()
-    }
-}
-
-impl WatchProgressRequest {
-    pub fn new() -> WatchProgressRequest {
-        ::std::default::Default::default()
-    }
-}
-
-impl ::protobuf::Message for WatchProgressRequest {
-    fn is_initialized(&self) -> bool {
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
-    }
-    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
-        self as &mut ::std::any::Any
-    }
-    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        Self::descriptor_static()
-    }
-
-    fn new() -> WatchProgressRequest {
-        WatchProgressRequest::new()
-    }
-
-    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                let fields = ::std::vec::Vec::new();
-                ::protobuf::reflect::MessageDescriptor::new::<WatchProgressRequest>(
-                    "WatchProgressRequest",
-                    fields,
-                    file_descriptor_proto()
-                )
-            })
-        }
-    }
-
-    fn default_instance() -> &'static WatchProgressRequest {
-        static mut instance: ::protobuf::lazy::Lazy<WatchProgressRequest> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const WatchProgressRequest,
-        };
-        unsafe {
-            instance.get(WatchProgressRequest::new)
-        }
-    }
-}
-
-impl ::protobuf::Clear for WatchProgressRequest {
-    fn clear(&mut self) {
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for WatchProgressRequest {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for WatchProgressRequest {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
-#[derive(PartialEq,Clone,Default)]
 pub struct WatchResponse {
     // message fields
     pub header: ::protobuf::SingularPtrField<ResponseHeader>,
@@ -7169,7 +6897,6 @@ pub struct WatchResponse {
     pub canceled: bool,
     pub compact_revision: i64,
     pub cancel_reason: ::std::string::String,
-    pub fragment: bool,
     pub events: ::protobuf::RepeatedField<super::kv::Event>,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
@@ -7306,21 +7033,6 @@ impl WatchResponse {
         ::std::mem::replace(&mut self.cancel_reason, ::std::string::String::new())
     }
 
-    // bool fragment = 7;
-
-
-    pub fn get_fragment(&self) -> bool {
-        self.fragment
-    }
-    pub fn clear_fragment(&mut self) {
-        self.fragment = false;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_fragment(&mut self, v: bool) {
-        self.fragment = v;
-    }
-
     // repeated .mvccpb.Event events = 11;
 
 
@@ -7400,13 +7112,6 @@ impl ::protobuf::Message for WatchResponse {
                 6 => {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.cancel_reason)?;
                 },
-                7 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_bool()?;
-                    self.fragment = tmp;
-                },
                 11 => {
                     ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.events)?;
                 },
@@ -7441,9 +7146,6 @@ impl ::protobuf::Message for WatchResponse {
         if !self.cancel_reason.is_empty() {
             my_size += ::protobuf::rt::string_size(6, &self.cancel_reason);
         }
-        if self.fragment != false {
-            my_size += 2;
-        }
         for value in &self.events {
             let len = value.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
@@ -7473,9 +7175,6 @@ impl ::protobuf::Message for WatchResponse {
         }
         if !self.cancel_reason.is_empty() {
             os.write_string(6, &self.cancel_reason)?;
-        }
-        if self.fragment != false {
-            os.write_bool(7, self.fragment)?;
         }
         for v in &self.events {
             os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited)?;
@@ -7554,11 +7253,6 @@ impl ::protobuf::Message for WatchResponse {
                     |m: &WatchResponse| { &m.cancel_reason },
                     |m: &mut WatchResponse| { &mut m.cancel_reason },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
-                    "fragment",
-                    |m: &WatchResponse| { &m.fragment },
-                    |m: &mut WatchResponse| { &mut m.fragment },
-                ));
                 fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::kv::Event>>(
                     "events",
                     |m: &WatchResponse| { &m.events },
@@ -7592,7 +7286,6 @@ impl ::protobuf::Clear for WatchResponse {
         self.canceled = false;
         self.compact_revision = 0;
         self.cancel_reason.clear();
-        self.fragment = false;
         self.events.clear();
         self.unknown_fields.clear();
     }
@@ -8444,563 +8137,6 @@ impl ::std::fmt::Debug for LeaseRevokeResponse {
 }
 
 impl ::protobuf::reflect::ProtobufValue for LeaseRevokeResponse {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
-#[derive(PartialEq,Clone,Default)]
-pub struct LeaseCheckpoint {
-    // message fields
-    pub ID: i64,
-    pub remaining_TTL: i64,
-    // special fields
-    pub unknown_fields: ::protobuf::UnknownFields,
-    pub cached_size: ::protobuf::CachedSize,
-}
-
-impl<'a> ::std::default::Default for &'a LeaseCheckpoint {
-    fn default() -> &'a LeaseCheckpoint {
-        <LeaseCheckpoint as ::protobuf::Message>::default_instance()
-    }
-}
-
-impl LeaseCheckpoint {
-    pub fn new() -> LeaseCheckpoint {
-        ::std::default::Default::default()
-    }
-
-    // int64 ID = 1;
-
-
-    pub fn get_ID(&self) -> i64 {
-        self.ID
-    }
-    pub fn clear_ID(&mut self) {
-        self.ID = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_ID(&mut self, v: i64) {
-        self.ID = v;
-    }
-
-    // int64 remaining_TTL = 2;
-
-
-    pub fn get_remaining_TTL(&self) -> i64 {
-        self.remaining_TTL
-    }
-    pub fn clear_remaining_TTL(&mut self) {
-        self.remaining_TTL = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_remaining_TTL(&mut self, v: i64) {
-        self.remaining_TTL = v;
-    }
-}
-
-impl ::protobuf::Message for LeaseCheckpoint {
-    fn is_initialized(&self) -> bool {
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                1 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_int64()?;
-                    self.ID = tmp;
-                },
-                2 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_int64()?;
-                    self.remaining_TTL = tmp;
-                },
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        if self.ID != 0 {
-            my_size += ::protobuf::rt::value_size(1, self.ID, ::protobuf::wire_format::WireTypeVarint);
-        }
-        if self.remaining_TTL != 0 {
-            my_size += ::protobuf::rt::value_size(2, self.remaining_TTL, ::protobuf::wire_format::WireTypeVarint);
-        }
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if self.ID != 0 {
-            os.write_int64(1, self.ID)?;
-        }
-        if self.remaining_TTL != 0 {
-            os.write_int64(2, self.remaining_TTL)?;
-        }
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
-    }
-    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
-        self as &mut ::std::any::Any
-    }
-    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        Self::descriptor_static()
-    }
-
-    fn new() -> LeaseCheckpoint {
-        LeaseCheckpoint::new()
-    }
-
-    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
-                    "ID",
-                    |m: &LeaseCheckpoint| { &m.ID },
-                    |m: &mut LeaseCheckpoint| { &mut m.ID },
-                ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
-                    "remaining_TTL",
-                    |m: &LeaseCheckpoint| { &m.remaining_TTL },
-                    |m: &mut LeaseCheckpoint| { &mut m.remaining_TTL },
-                ));
-                ::protobuf::reflect::MessageDescriptor::new::<LeaseCheckpoint>(
-                    "LeaseCheckpoint",
-                    fields,
-                    file_descriptor_proto()
-                )
-            })
-        }
-    }
-
-    fn default_instance() -> &'static LeaseCheckpoint {
-        static mut instance: ::protobuf::lazy::Lazy<LeaseCheckpoint> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const LeaseCheckpoint,
-        };
-        unsafe {
-            instance.get(LeaseCheckpoint::new)
-        }
-    }
-}
-
-impl ::protobuf::Clear for LeaseCheckpoint {
-    fn clear(&mut self) {
-        self.ID = 0;
-        self.remaining_TTL = 0;
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for LeaseCheckpoint {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for LeaseCheckpoint {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
-#[derive(PartialEq,Clone,Default)]
-pub struct LeaseCheckpointRequest {
-    // message fields
-    pub checkpoints: ::protobuf::RepeatedField<LeaseCheckpoint>,
-    // special fields
-    pub unknown_fields: ::protobuf::UnknownFields,
-    pub cached_size: ::protobuf::CachedSize,
-}
-
-impl<'a> ::std::default::Default for &'a LeaseCheckpointRequest {
-    fn default() -> &'a LeaseCheckpointRequest {
-        <LeaseCheckpointRequest as ::protobuf::Message>::default_instance()
-    }
-}
-
-impl LeaseCheckpointRequest {
-    pub fn new() -> LeaseCheckpointRequest {
-        ::std::default::Default::default()
-    }
-
-    // repeated .etcdserverpb.LeaseCheckpoint checkpoints = 1;
-
-
-    pub fn get_checkpoints(&self) -> &[LeaseCheckpoint] {
-        &self.checkpoints
-    }
-    pub fn clear_checkpoints(&mut self) {
-        self.checkpoints.clear();
-    }
-
-    // Param is passed by value, moved
-    pub fn set_checkpoints(&mut self, v: ::protobuf::RepeatedField<LeaseCheckpoint>) {
-        self.checkpoints = v;
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_checkpoints(&mut self) -> &mut ::protobuf::RepeatedField<LeaseCheckpoint> {
-        &mut self.checkpoints
-    }
-
-    // Take field
-    pub fn take_checkpoints(&mut self) -> ::protobuf::RepeatedField<LeaseCheckpoint> {
-        ::std::mem::replace(&mut self.checkpoints, ::protobuf::RepeatedField::new())
-    }
-}
-
-impl ::protobuf::Message for LeaseCheckpointRequest {
-    fn is_initialized(&self) -> bool {
-        for v in &self.checkpoints {
-            if !v.is_initialized() {
-                return false;
-            }
-        };
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                1 => {
-                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.checkpoints)?;
-                },
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        for value in &self.checkpoints {
-            let len = value.compute_size();
-            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-        };
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        for v in &self.checkpoints {
-            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-            os.write_raw_varint32(v.get_cached_size())?;
-            v.write_to_with_cached_sizes(os)?;
-        };
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
-    }
-    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
-        self as &mut ::std::any::Any
-    }
-    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        Self::descriptor_static()
-    }
-
-    fn new() -> LeaseCheckpointRequest {
-        LeaseCheckpointRequest::new()
-    }
-
-    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<LeaseCheckpoint>>(
-                    "checkpoints",
-                    |m: &LeaseCheckpointRequest| { &m.checkpoints },
-                    |m: &mut LeaseCheckpointRequest| { &mut m.checkpoints },
-                ));
-                ::protobuf::reflect::MessageDescriptor::new::<LeaseCheckpointRequest>(
-                    "LeaseCheckpointRequest",
-                    fields,
-                    file_descriptor_proto()
-                )
-            })
-        }
-    }
-
-    fn default_instance() -> &'static LeaseCheckpointRequest {
-        static mut instance: ::protobuf::lazy::Lazy<LeaseCheckpointRequest> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const LeaseCheckpointRequest,
-        };
-        unsafe {
-            instance.get(LeaseCheckpointRequest::new)
-        }
-    }
-}
-
-impl ::protobuf::Clear for LeaseCheckpointRequest {
-    fn clear(&mut self) {
-        self.checkpoints.clear();
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for LeaseCheckpointRequest {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for LeaseCheckpointRequest {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
-#[derive(PartialEq,Clone,Default)]
-pub struct LeaseCheckpointResponse {
-    // message fields
-    pub header: ::protobuf::SingularPtrField<ResponseHeader>,
-    // special fields
-    pub unknown_fields: ::protobuf::UnknownFields,
-    pub cached_size: ::protobuf::CachedSize,
-}
-
-impl<'a> ::std::default::Default for &'a LeaseCheckpointResponse {
-    fn default() -> &'a LeaseCheckpointResponse {
-        <LeaseCheckpointResponse as ::protobuf::Message>::default_instance()
-    }
-}
-
-impl LeaseCheckpointResponse {
-    pub fn new() -> LeaseCheckpointResponse {
-        ::std::default::Default::default()
-    }
-
-    // .etcdserverpb.ResponseHeader header = 1;
-
-
-    pub fn get_header(&self) -> &ResponseHeader {
-        self.header.as_ref().unwrap_or_else(|| ResponseHeader::default_instance())
-    }
-    pub fn clear_header(&mut self) {
-        self.header.clear();
-    }
-
-    pub fn has_header(&self) -> bool {
-        self.header.is_some()
-    }
-
-    // Param is passed by value, moved
-    pub fn set_header(&mut self, v: ResponseHeader) {
-        self.header = ::protobuf::SingularPtrField::some(v);
-    }
-
-    // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
-    pub fn mut_header(&mut self) -> &mut ResponseHeader {
-        if self.header.is_none() {
-            self.header.set_default();
-        }
-        self.header.as_mut().unwrap()
-    }
-
-    // Take field
-    pub fn take_header(&mut self) -> ResponseHeader {
-        self.header.take().unwrap_or_else(|| ResponseHeader::new())
-    }
-}
-
-impl ::protobuf::Message for LeaseCheckpointResponse {
-    fn is_initialized(&self) -> bool {
-        for v in &self.header {
-            if !v.is_initialized() {
-                return false;
-            }
-        };
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                1 => {
-                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.header)?;
-                },
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        if let Some(ref v) = self.header.as_ref() {
-            let len = v.compute_size();
-            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-        }
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if let Some(ref v) = self.header.as_ref() {
-            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-            os.write_raw_varint32(v.get_cached_size())?;
-            v.write_to_with_cached_sizes(os)?;
-        }
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
-    }
-    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
-        self as &mut ::std::any::Any
-    }
-    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        Self::descriptor_static()
-    }
-
-    fn new() -> LeaseCheckpointResponse {
-        LeaseCheckpointResponse::new()
-    }
-
-    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ResponseHeader>>(
-                    "header",
-                    |m: &LeaseCheckpointResponse| { &m.header },
-                    |m: &mut LeaseCheckpointResponse| { &mut m.header },
-                ));
-                ::protobuf::reflect::MessageDescriptor::new::<LeaseCheckpointResponse>(
-                    "LeaseCheckpointResponse",
-                    fields,
-                    file_descriptor_proto()
-                )
-            })
-        }
-    }
-
-    fn default_instance() -> &'static LeaseCheckpointResponse {
-        static mut instance: ::protobuf::lazy::Lazy<LeaseCheckpointResponse> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const LeaseCheckpointResponse,
-        };
-        unsafe {
-            instance.get(LeaseCheckpointResponse::new)
-        }
-    }
-}
-
-impl ::protobuf::Clear for LeaseCheckpointResponse {
-    fn clear(&mut self) {
-        self.header.clear();
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for LeaseCheckpointResponse {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for LeaseCheckpointResponse {
     fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
         ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
@@ -13903,9 +13039,6 @@ pub struct StatusResponse {
     pub leader: u64,
     pub raftIndex: u64,
     pub raftTerm: u64,
-    pub raftAppliedIndex: u64,
-    pub errors: ::protobuf::RepeatedField<::std::string::String>,
-    pub dbSizeInUse: i64,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -14040,61 +13173,6 @@ impl StatusResponse {
     pub fn set_raftTerm(&mut self, v: u64) {
         self.raftTerm = v;
     }
-
-    // uint64 raftAppliedIndex = 7;
-
-
-    pub fn get_raftAppliedIndex(&self) -> u64 {
-        self.raftAppliedIndex
-    }
-    pub fn clear_raftAppliedIndex(&mut self) {
-        self.raftAppliedIndex = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_raftAppliedIndex(&mut self, v: u64) {
-        self.raftAppliedIndex = v;
-    }
-
-    // repeated string errors = 8;
-
-
-    pub fn get_errors(&self) -> &[::std::string::String] {
-        &self.errors
-    }
-    pub fn clear_errors(&mut self) {
-        self.errors.clear();
-    }
-
-    // Param is passed by value, moved
-    pub fn set_errors(&mut self, v: ::protobuf::RepeatedField<::std::string::String>) {
-        self.errors = v;
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_errors(&mut self) -> &mut ::protobuf::RepeatedField<::std::string::String> {
-        &mut self.errors
-    }
-
-    // Take field
-    pub fn take_errors(&mut self) -> ::protobuf::RepeatedField<::std::string::String> {
-        ::std::mem::replace(&mut self.errors, ::protobuf::RepeatedField::new())
-    }
-
-    // int64 dbSizeInUse = 9;
-
-
-    pub fn get_dbSizeInUse(&self) -> i64 {
-        self.dbSizeInUse
-    }
-    pub fn clear_dbSizeInUse(&mut self) {
-        self.dbSizeInUse = 0;
-    }
-
-    // Param is passed by value, moved
-    pub fn set_dbSizeInUse(&mut self, v: i64) {
-        self.dbSizeInUse = v;
-    }
 }
 
 impl ::protobuf::Message for StatusResponse {
@@ -14145,23 +13223,6 @@ impl ::protobuf::Message for StatusResponse {
                     let tmp = is.read_uint64()?;
                     self.raftTerm = tmp;
                 },
-                7 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_uint64()?;
-                    self.raftAppliedIndex = tmp;
-                },
-                8 => {
-                    ::protobuf::rt::read_repeated_string_into(wire_type, is, &mut self.errors)?;
-                },
-                9 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    let tmp = is.read_int64()?;
-                    self.dbSizeInUse = tmp;
-                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -14193,15 +13254,6 @@ impl ::protobuf::Message for StatusResponse {
         if self.raftTerm != 0 {
             my_size += ::protobuf::rt::value_size(6, self.raftTerm, ::protobuf::wire_format::WireTypeVarint);
         }
-        if self.raftAppliedIndex != 0 {
-            my_size += ::protobuf::rt::value_size(7, self.raftAppliedIndex, ::protobuf::wire_format::WireTypeVarint);
-        }
-        for value in &self.errors {
-            my_size += ::protobuf::rt::string_size(8, &value);
-        };
-        if self.dbSizeInUse != 0 {
-            my_size += ::protobuf::rt::value_size(9, self.dbSizeInUse, ::protobuf::wire_format::WireTypeVarint);
-        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -14227,15 +13279,6 @@ impl ::protobuf::Message for StatusResponse {
         }
         if self.raftTerm != 0 {
             os.write_uint64(6, self.raftTerm)?;
-        }
-        if self.raftAppliedIndex != 0 {
-            os.write_uint64(7, self.raftAppliedIndex)?;
-        }
-        for v in &self.errors {
-            os.write_string(8, &v)?;
-        };
-        if self.dbSizeInUse != 0 {
-            os.write_int64(9, self.dbSizeInUse)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -14309,21 +13352,6 @@ impl ::protobuf::Message for StatusResponse {
                     |m: &StatusResponse| { &m.raftTerm },
                     |m: &mut StatusResponse| { &mut m.raftTerm },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
-                    "raftAppliedIndex",
-                    |m: &StatusResponse| { &m.raftAppliedIndex },
-                    |m: &mut StatusResponse| { &mut m.raftAppliedIndex },
-                ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
-                    "errors",
-                    |m: &StatusResponse| { &m.errors },
-                    |m: &mut StatusResponse| { &mut m.errors },
-                ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt64>(
-                    "dbSizeInUse",
-                    |m: &StatusResponse| { &m.dbSizeInUse },
-                    |m: &mut StatusResponse| { &mut m.dbSizeInUse },
-                ));
                 ::protobuf::reflect::MessageDescriptor::new::<StatusResponse>(
                     "StatusResponse",
                     fields,
@@ -14352,9 +13380,6 @@ impl ::protobuf::Clear for StatusResponse {
         self.leader = 0;
         self.raftIndex = 0;
         self.raftTerm = 0;
-        self.raftAppliedIndex = 0;
-        self.errors.clear();
-        self.dbSizeInUse = 0;
         self.unknown_fields.clear();
     }
 }
@@ -17005,8 +16030,8 @@ impl ::protobuf::reflect::ProtobufValue for AuthRoleGrantPermissionRequest {
 pub struct AuthRoleRevokePermissionRequest {
     // message fields
     pub role: ::std::string::String,
-    pub key: ::std::vec::Vec<u8>,
-    pub range_end: ::std::vec::Vec<u8>,
+    pub key: ::std::string::String,
+    pub range_end: ::std::string::String,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -17049,10 +16074,10 @@ impl AuthRoleRevokePermissionRequest {
         ::std::mem::replace(&mut self.role, ::std::string::String::new())
     }
 
-    // bytes key = 2;
+    // string key = 2;
 
 
-    pub fn get_key(&self) -> &[u8] {
+    pub fn get_key(&self) -> &str {
         &self.key
     }
     pub fn clear_key(&mut self) {
@@ -17060,25 +16085,25 @@ impl AuthRoleRevokePermissionRequest {
     }
 
     // Param is passed by value, moved
-    pub fn set_key(&mut self, v: ::std::vec::Vec<u8>) {
+    pub fn set_key(&mut self, v: ::std::string::String) {
         self.key = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_key(&mut self) -> &mut ::std::vec::Vec<u8> {
+    pub fn mut_key(&mut self) -> &mut ::std::string::String {
         &mut self.key
     }
 
     // Take field
-    pub fn take_key(&mut self) -> ::std::vec::Vec<u8> {
-        ::std::mem::replace(&mut self.key, ::std::vec::Vec::new())
+    pub fn take_key(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.key, ::std::string::String::new())
     }
 
-    // bytes range_end = 3;
+    // string range_end = 3;
 
 
-    pub fn get_range_end(&self) -> &[u8] {
+    pub fn get_range_end(&self) -> &str {
         &self.range_end
     }
     pub fn clear_range_end(&mut self) {
@@ -17086,19 +16111,19 @@ impl AuthRoleRevokePermissionRequest {
     }
 
     // Param is passed by value, moved
-    pub fn set_range_end(&mut self, v: ::std::vec::Vec<u8>) {
+    pub fn set_range_end(&mut self, v: ::std::string::String) {
         self.range_end = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_range_end(&mut self) -> &mut ::std::vec::Vec<u8> {
+    pub fn mut_range_end(&mut self) -> &mut ::std::string::String {
         &mut self.range_end
     }
 
     // Take field
-    pub fn take_range_end(&mut self) -> ::std::vec::Vec<u8> {
-        ::std::mem::replace(&mut self.range_end, ::std::vec::Vec::new())
+    pub fn take_range_end(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.range_end, ::std::string::String::new())
     }
 }
 
@@ -17115,10 +16140,10 @@ impl ::protobuf::Message for AuthRoleRevokePermissionRequest {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.role)?;
                 },
                 2 => {
-                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.key)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.key)?;
                 },
                 3 => {
-                    ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.range_end)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.range_end)?;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -17136,10 +16161,10 @@ impl ::protobuf::Message for AuthRoleRevokePermissionRequest {
             my_size += ::protobuf::rt::string_size(1, &self.role);
         }
         if !self.key.is_empty() {
-            my_size += ::protobuf::rt::bytes_size(2, &self.key);
+            my_size += ::protobuf::rt::string_size(2, &self.key);
         }
         if !self.range_end.is_empty() {
-            my_size += ::protobuf::rt::bytes_size(3, &self.range_end);
+            my_size += ::protobuf::rt::string_size(3, &self.range_end);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -17151,10 +16176,10 @@ impl ::protobuf::Message for AuthRoleRevokePermissionRequest {
             os.write_string(1, &self.role)?;
         }
         if !self.key.is_empty() {
-            os.write_bytes(2, &self.key)?;
+            os.write_string(2, &self.key)?;
         }
         if !self.range_end.is_empty() {
-            os.write_bytes(3, &self.range_end)?;
+            os.write_string(3, &self.range_end)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -17203,12 +16228,12 @@ impl ::protobuf::Message for AuthRoleRevokePermissionRequest {
                     |m: &AuthRoleRevokePermissionRequest| { &m.role },
                     |m: &mut AuthRoleRevokePermissionRequest| { &mut m.role },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "key",
                     |m: &AuthRoleRevokePermissionRequest| { &m.key },
                     |m: &mut AuthRoleRevokePermissionRequest| { &mut m.key },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "range_end",
                     |m: &AuthRoleRevokePermissionRequest| { &m.range_end },
                     |m: &mut AuthRoleRevokePermissionRequest| { &mut m.range_end },
@@ -20555,118 +19580,106 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x01\n\x10SnapshotResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.et\
     cdserverpb.ResponseHeaderR\x06header\x12'\n\x0fremaining_bytes\x18\x02\
     \x20\x01(\x04R\x0eremainingBytes\x12\x12\n\x04blob\x18\x03\x20\x01(\x0cR\
-    \x04blob\"\x86\x02\n\x0cWatchRequest\x12I\n\x0ecreate_request\x18\x01\
+    \x04blob\"\xb5\x01\n\x0cWatchRequest\x12I\n\x0ecreate_request\x18\x01\
     \x20\x01(\x0b2\x20.etcdserverpb.WatchCreateRequestH\0R\rcreateRequest\
     \x12I\n\x0ecancel_request\x18\x02\x20\x01(\x0b2\x20.etcdserverpb.WatchCa\
-    ncelRequestH\0R\rcancelRequest\x12O\n\x10progress_request\x18\x03\x20\
-    \x01(\x0b2\".etcdserverpb.WatchProgressRequestH\0R\x0fprogressRequestB\
-    \x0f\n\rrequest_union\"\xd1\x02\n\x12WatchCreateRequest\x12\x10\n\x03key\
-    \x18\x01\x20\x01(\x0cR\x03key\x12\x1b\n\trange_end\x18\x02\x20\x01(\x0cR\
-    \x08rangeEnd\x12%\n\x0estart_revision\x18\x03\x20\x01(\x03R\rstartRevisi\
-    on\x12'\n\x0fprogress_notify\x18\x04\x20\x01(\x08R\x0eprogressNotify\x12\
-    E\n\x07filters\x18\x05\x20\x03(\x0e2+.etcdserverpb.WatchCreateRequest.Fi\
-    lterTypeR\x07filters\x12\x17\n\x07prev_kv\x18\x06\x20\x01(\x08R\x06prevK\
-    v\x12\x19\n\x08watch_id\x18\x07\x20\x01(\x03R\x07watchId\x12\x1a\n\x08fr\
-    agment\x18\x08\x20\x01(\x08R\x08fragment\"%\n\nFilterType\x12\t\n\x05NOP\
-    UT\x10\0\x12\x0c\n\x08NODELETE\x10\x01\"/\n\x12WatchCancelRequest\x12\
-    \x19\n\x08watch_id\x18\x01\x20\x01(\x03R\x07watchId\"\x16\n\x14WatchProg\
-    ressRequest\"\xa9\x02\n\rWatchResponse\x124\n\x06header\x18\x01\x20\x01(\
-    \x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12\x19\n\x08watch_id\
-    \x18\x02\x20\x01(\x03R\x07watchId\x12\x18\n\x07created\x18\x03\x20\x01(\
-    \x08R\x07created\x12\x1a\n\x08canceled\x18\x04\x20\x01(\x08R\x08canceled\
-    \x12)\n\x10compact_revision\x18\x05\x20\x01(\x03R\x0fcompactRevision\x12\
-    #\n\rcancel_reason\x18\x06\x20\x01(\tR\x0ccancelReason\x12\x1a\n\x08frag\
-    ment\x18\x07\x20\x01(\x08R\x08fragment\x12%\n\x06events\x18\x0b\x20\x03(\
-    \x0b2\r.mvccpb.EventR\x06events\"5\n\x11LeaseGrantRequest\x12\x10\n\x03T\
-    TL\x18\x01\x20\x01(\x03R\x03TTL\x12\x0e\n\x02ID\x18\x02\x20\x01(\x03R\
-    \x02ID\"\x82\x01\n\x12LeaseGrantResponse\x124\n\x06header\x18\x01\x20\
-    \x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12\x0e\n\x02ID\
-    \x18\x02\x20\x01(\x03R\x02ID\x12\x10\n\x03TTL\x18\x03\x20\x01(\x03R\x03T\
-    TL\x12\x14\n\x05error\x18\x04\x20\x01(\tR\x05error\"$\n\x12LeaseRevokeRe\
-    quest\x12\x0e\n\x02ID\x18\x01\x20\x01(\x03R\x02ID\"K\n\x13LeaseRevokeRes\
+    ncelRequestH\0R\rcancelRequestB\x0f\n\rrequest_union\"\x9a\x02\n\x12Watc\
+    hCreateRequest\x12\x10\n\x03key\x18\x01\x20\x01(\x0cR\x03key\x12\x1b\n\t\
+    range_end\x18\x02\x20\x01(\x0cR\x08rangeEnd\x12%\n\x0estart_revision\x18\
+    \x03\x20\x01(\x03R\rstartRevision\x12'\n\x0fprogress_notify\x18\x04\x20\
+    \x01(\x08R\x0eprogressNotify\x12E\n\x07filters\x18\x05\x20\x03(\x0e2+.et\
+    cdserverpb.WatchCreateRequest.FilterTypeR\x07filters\x12\x17\n\x07prev_k\
+    v\x18\x06\x20\x01(\x08R\x06prevKv\"%\n\nFilterType\x12\t\n\x05NOPUT\x10\
+    \0\x12\x0c\n\x08NODELETE\x10\x01\"/\n\x12WatchCancelRequest\x12\x19\n\
+    \x08watch_id\x18\x01\x20\x01(\x03R\x07watchId\"\x8d\x02\n\rWatchResponse\
+    \x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\
+    \x06header\x12\x19\n\x08watch_id\x18\x02\x20\x01(\x03R\x07watchId\x12\
+    \x18\n\x07created\x18\x03\x20\x01(\x08R\x07created\x12\x1a\n\x08canceled\
+    \x18\x04\x20\x01(\x08R\x08canceled\x12)\n\x10compact_revision\x18\x05\
+    \x20\x01(\x03R\x0fcompactRevision\x12#\n\rcancel_reason\x18\x06\x20\x01(\
+    \tR\x0ccancelReason\x12%\n\x06events\x18\x0b\x20\x03(\x0b2\r.mvccpb.Even\
+    tR\x06events\"5\n\x11LeaseGrantRequest\x12\x10\n\x03TTL\x18\x01\x20\x01(\
+    \x03R\x03TTL\x12\x0e\n\x02ID\x18\x02\x20\x01(\x03R\x02ID\"\x82\x01\n\x12\
+    LeaseGrantResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserver\
+    pb.ResponseHeaderR\x06header\x12\x0e\n\x02ID\x18\x02\x20\x01(\x03R\x02ID\
+    \x12\x10\n\x03TTL\x18\x03\x20\x01(\x03R\x03TTL\x12\x14\n\x05error\x18\
+    \x04\x20\x01(\tR\x05error\"$\n\x12LeaseRevokeRequest\x12\x0e\n\x02ID\x18\
+    \x01\x20\x01(\x03R\x02ID\"K\n\x13LeaseRevokeResponse\x124\n\x06header\
+    \x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\"'\n\
+    \x15LeaseKeepAliveRequest\x12\x0e\n\x02ID\x18\x01\x20\x01(\x03R\x02ID\"p\
+    \n\x16LeaseKeepAliveResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.\
+    etcdserverpb.ResponseHeaderR\x06header\x12\x0e\n\x02ID\x18\x02\x20\x01(\
+    \x03R\x02ID\x12\x10\n\x03TTL\x18\x03\x20\x01(\x03R\x03TTL\"<\n\x16LeaseT\
+    imeToLiveRequest\x12\x0e\n\x02ID\x18\x01\x20\x01(\x03R\x02ID\x12\x12\n\
+    \x04keys\x18\x02\x20\x01(\x08R\x04keys\"\xa5\x01\n\x17LeaseTimeToLiveRes\
     ponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHe\
-    aderR\x06header\"F\n\x0fLeaseCheckpoint\x12\x0e\n\x02ID\x18\x01\x20\x01(\
-    \x03R\x02ID\x12#\n\rremaining_TTL\x18\x02\x20\x01(\x03R\x0cremainingTTL\
-    \"Y\n\x16LeaseCheckpointRequest\x12?\n\x0bcheckpoints\x18\x01\x20\x03(\
-    \x0b2\x1d.etcdserverpb.LeaseCheckpointR\x0bcheckpoints\"O\n\x17LeaseChec\
-    kpointResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.R\
-    esponseHeaderR\x06header\"'\n\x15LeaseKeepAliveRequest\x12\x0e\n\x02ID\
-    \x18\x01\x20\x01(\x03R\x02ID\"p\n\x16LeaseKeepAliveResponse\x124\n\x06he\
-    ader\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\
-    \x12\x0e\n\x02ID\x18\x02\x20\x01(\x03R\x02ID\x12\x10\n\x03TTL\x18\x03\
-    \x20\x01(\x03R\x03TTL\"<\n\x16LeaseTimeToLiveRequest\x12\x0e\n\x02ID\x18\
-    \x01\x20\x01(\x03R\x02ID\x12\x12\n\x04keys\x18\x02\x20\x01(\x08R\x04keys\
-    \"\xa5\x01\n\x17LeaseTimeToLiveResponse\x124\n\x06header\x18\x01\x20\x01\
-    (\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12\x0e\n\x02ID\x18\
-    \x02\x20\x01(\x03R\x02ID\x12\x10\n\x03TTL\x18\x03\x20\x01(\x03R\x03TTL\
-    \x12\x1e\n\ngrantedTTL\x18\x04\x20\x01(\x03R\ngrantedTTL\x12\x12\n\x04ke\
-    ys\x18\x05\x20\x03(\x0cR\x04keys\"\x14\n\x12LeaseLeasesRequest\"\x1d\n\
-    \x0bLeaseStatus\x12\x0e\n\x02ID\x18\x01\x20\x01(\x03R\x02ID\"~\n\x13Leas\
-    eLeasesResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.\
-    ResponseHeaderR\x06header\x121\n\x06leases\x18\x02\x20\x03(\x0b2\x19.etc\
-    dserverpb.LeaseStatusR\x06leases\"h\n\x06Member\x12\x0e\n\x02ID\x18\x01\
-    \x20\x01(\x04R\x02ID\x12\x12\n\x04name\x18\x02\x20\x01(\tR\x04name\x12\
-    \x1a\n\x08peerURLs\x18\x03\x20\x03(\tR\x08peerURLs\x12\x1e\n\nclientURLs\
-    \x18\x04\x20\x03(\tR\nclientURLs\".\n\x10MemberAddRequest\x12\x1a\n\x08p\
-    eerURLs\x18\x01\x20\x03(\tR\x08peerURLs\"\xa7\x01\n\x11MemberAddResponse\
-    \x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\
-    \x06header\x12,\n\x06member\x18\x02\x20\x01(\x0b2\x14.etcdserverpb.Membe\
-    rR\x06member\x12.\n\x07members\x18\x03\x20\x03(\x0b2\x14.etcdserverpb.Me\
-    mberR\x07members\"%\n\x13MemberRemoveRequest\x12\x0e\n\x02ID\x18\x01\x20\
-    \x01(\x04R\x02ID\"|\n\x14MemberRemoveResponse\x124\n\x06header\x18\x01\
-    \x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12.\n\x07memb\
-    ers\x18\x02\x20\x03(\x0b2\x14.etcdserverpb.MemberR\x07members\"A\n\x13Me\
-    mberUpdateRequest\x12\x0e\n\x02ID\x18\x01\x20\x01(\x04R\x02ID\x12\x1a\n\
-    \x08peerURLs\x18\x02\x20\x03(\tR\x08peerURLs\"|\n\x14MemberUpdateRespons\
-    e\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeader\
-    R\x06header\x12.\n\x07members\x18\x02\x20\x03(\x0b2\x14.etcdserverpb.Mem\
-    berR\x07members\"\x13\n\x11MemberListRequest\"z\n\x12MemberListResponse\
-    \x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\
-    \x06header\x12.\n\x07members\x18\x02\x20\x03(\x0b2\x14.etcdserverpb.Memb\
-    erR\x07members\"\x13\n\x11DefragmentRequest\"J\n\x12DefragmentResponse\
-    \x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\
-    \x06header\"/\n\x11MoveLeaderRequest\x12\x1a\n\x08targetID\x18\x01\x20\
-    \x01(\x04R\x08targetID\"J\n\x12MoveLeaderResponse\x124\n\x06header\x18\
-    \x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\"\xcf\x01\
-    \n\x0cAlarmRequest\x12>\n\x06action\x18\x01\x20\x01(\x0e2&.etcdserverpb.\
-    AlarmRequest.AlarmActionR\x06action\x12\x1a\n\x08memberID\x18\x02\x20\
-    \x01(\x04R\x08memberID\x12-\n\x05alarm\x18\x03\x20\x01(\x0e2\x17.etcdser\
-    verpb.AlarmTypeR\x05alarm\"4\n\x0bAlarmAction\x12\x07\n\x03GET\x10\0\x12\
-    \x0c\n\x08ACTIVATE\x10\x01\x12\x0e\n\nDEACTIVATE\x10\x02\"X\n\x0bAlarmMe\
-    mber\x12\x1a\n\x08memberID\x18\x01\x20\x01(\x04R\x08memberID\x12-\n\x05a\
-    larm\x18\x02\x20\x01(\x0e2\x17.etcdserverpb.AlarmTypeR\x05alarm\"x\n\rAl\
-    armResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.Resp\
-    onseHeaderR\x06header\x121\n\x06alarms\x18\x02\x20\x03(\x0b2\x19.etcdser\
-    verpb.AlarmMemberR\x06alarms\"\x0f\n\rStatusRequest\"\xb0\x02\n\x0eStatu\
-    sResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.Respon\
-    seHeaderR\x06header\x12\x18\n\x07version\x18\x02\x20\x01(\tR\x07version\
-    \x12\x16\n\x06dbSize\x18\x03\x20\x01(\x03R\x06dbSize\x12\x16\n\x06leader\
-    \x18\x04\x20\x01(\x04R\x06leader\x12\x1c\n\traftIndex\x18\x05\x20\x01(\
-    \x04R\traftIndex\x12\x1a\n\x08raftTerm\x18\x06\x20\x01(\x04R\x08raftTerm\
-    \x12*\n\x10raftAppliedIndex\x18\x07\x20\x01(\x04R\x10raftAppliedIndex\
-    \x12\x16\n\x06errors\x18\x08\x20\x03(\tR\x06errors\x12\x20\n\x0bdbSizeIn\
-    Use\x18\t\x20\x01(\x03R\x0bdbSizeInUse\"\x13\n\x11AuthEnableRequest\"\
-    \x14\n\x12AuthDisableRequest\"E\n\x13AuthenticateRequest\x12\x12\n\x04na\
-    me\x18\x01\x20\x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\x01(\tR\
-    \x08password\"D\n\x12AuthUserAddRequest\x12\x12\n\x04name\x18\x01\x20\
-    \x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\x01(\tR\x08password\"\
-    (\n\x12AuthUserGetRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\
-    \"+\n\x15AuthUserDeleteRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04\
-    name\"O\n\x1dAuthUserChangePasswordRequest\x12\x12\n\x04name\x18\x01\x20\
-    \x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\x01(\tR\x08password\"\
-    B\n\x18AuthUserGrantRoleRequest\x12\x12\n\x04user\x18\x01\x20\x01(\tR\
-    \x04user\x12\x12\n\x04role\x18\x02\x20\x01(\tR\x04role\"C\n\x19AuthUserR\
-    evokeRoleRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\x12\x12\n\
-    \x04role\x18\x02\x20\x01(\tR\x04role\"(\n\x12AuthRoleAddRequest\x12\x12\
-    \n\x04name\x18\x01\x20\x01(\tR\x04name\"(\n\x12AuthRoleGetRequest\x12\
-    \x12\n\x04role\x18\x01\x20\x01(\tR\x04role\"\x15\n\x13AuthUserListReques\
-    t\"\x15\n\x13AuthRoleListRequest\"+\n\x15AuthRoleDeleteRequest\x12\x12\n\
-    \x04role\x18\x01\x20\x01(\tR\x04role\"\\\n\x1eAuthRoleGrantPermissionReq\
-    uest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\x12&\n\x04perm\x18\
-    \x02\x20\x01(\x0b2\x12.authpb.PermissionR\x04perm\"d\n\x1fAuthRoleRevoke\
-    PermissionRequest\x12\x12\n\x04role\x18\x01\x20\x01(\tR\x04role\x12\x10\
-    \n\x03key\x18\x02\x20\x01(\x0cR\x03key\x12\x1b\n\trange_end\x18\x03\x20\
-    \x01(\x0cR\x08rangeEnd\"J\n\x12AuthEnableResponse\x124\n\x06header\x18\
+    aderR\x06header\x12\x0e\n\x02ID\x18\x02\x20\x01(\x03R\x02ID\x12\x10\n\
+    \x03TTL\x18\x03\x20\x01(\x03R\x03TTL\x12\x1e\n\ngrantedTTL\x18\x04\x20\
+    \x01(\x03R\ngrantedTTL\x12\x12\n\x04keys\x18\x05\x20\x03(\x0cR\x04keys\"\
+    \x14\n\x12LeaseLeasesRequest\"\x1d\n\x0bLeaseStatus\x12\x0e\n\x02ID\x18\
+    \x01\x20\x01(\x03R\x02ID\"~\n\x13LeaseLeasesResponse\x124\n\x06header\
+    \x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x121\n\
+    \x06leases\x18\x02\x20\x03(\x0b2\x19.etcdserverpb.LeaseStatusR\x06leases\
+    \"h\n\x06Member\x12\x0e\n\x02ID\x18\x01\x20\x01(\x04R\x02ID\x12\x12\n\
+    \x04name\x18\x02\x20\x01(\tR\x04name\x12\x1a\n\x08peerURLs\x18\x03\x20\
+    \x03(\tR\x08peerURLs\x12\x1e\n\nclientURLs\x18\x04\x20\x03(\tR\nclientUR\
+    Ls\".\n\x10MemberAddRequest\x12\x1a\n\x08peerURLs\x18\x01\x20\x03(\tR\
+    \x08peerURLs\"\xa7\x01\n\x11MemberAddResponse\x124\n\x06header\x18\x01\
+    \x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12,\n\x06memb\
+    er\x18\x02\x20\x01(\x0b2\x14.etcdserverpb.MemberR\x06member\x12.\n\x07me\
+    mbers\x18\x03\x20\x03(\x0b2\x14.etcdserverpb.MemberR\x07members\"%\n\x13\
+    MemberRemoveRequest\x12\x0e\n\x02ID\x18\x01\x20\x01(\x04R\x02ID\"|\n\x14\
+    MemberRemoveResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserv\
+    erpb.ResponseHeaderR\x06header\x12.\n\x07members\x18\x02\x20\x03(\x0b2\
+    \x14.etcdserverpb.MemberR\x07members\"A\n\x13MemberUpdateRequest\x12\x0e\
+    \n\x02ID\x18\x01\x20\x01(\x04R\x02ID\x12\x1a\n\x08peerURLs\x18\x02\x20\
+    \x03(\tR\x08peerURLs\"|\n\x14MemberUpdateResponse\x124\n\x06header\x18\
+    \x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12.\n\x07\
+    members\x18\x02\x20\x03(\x0b2\x14.etcdserverpb.MemberR\x07members\"\x13\
+    \n\x11MemberListRequest\"z\n\x12MemberListResponse\x124\n\x06header\x18\
+    \x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12.\n\x07\
+    members\x18\x02\x20\x03(\x0b2\x14.etcdserverpb.MemberR\x07members\"\x13\
+    \n\x11DefragmentRequest\"J\n\x12DefragmentResponse\x124\n\x06header\x18\
+    \x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\"/\n\x11Mo\
+    veLeaderRequest\x12\x1a\n\x08targetID\x18\x01\x20\x01(\x04R\x08targetID\
+    \"J\n\x12MoveLeaderResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.e\
+    tcdserverpb.ResponseHeaderR\x06header\"\xcf\x01\n\x0cAlarmRequest\x12>\n\
+    \x06action\x18\x01\x20\x01(\x0e2&.etcdserverpb.AlarmRequest.AlarmActionR\
+    \x06action\x12\x1a\n\x08memberID\x18\x02\x20\x01(\x04R\x08memberID\x12-\
+    \n\x05alarm\x18\x03\x20\x01(\x0e2\x17.etcdserverpb.AlarmTypeR\x05alarm\"\
+    4\n\x0bAlarmAction\x12\x07\n\x03GET\x10\0\x12\x0c\n\x08ACTIVATE\x10\x01\
+    \x12\x0e\n\nDEACTIVATE\x10\x02\"X\n\x0bAlarmMember\x12\x1a\n\x08memberID\
+    \x18\x01\x20\x01(\x04R\x08memberID\x12-\n\x05alarm\x18\x02\x20\x01(\x0e2\
+    \x17.etcdserverpb.AlarmTypeR\x05alarm\"x\n\rAlarmResponse\x124\n\x06head\
+    er\x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x121\
+    \n\x06alarms\x18\x02\x20\x03(\x0b2\x19.etcdserverpb.AlarmMemberR\x06alar\
+    ms\"\x0f\n\rStatusRequest\"\xca\x01\n\x0eStatusResponse\x124\n\x06header\
+    \x18\x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\x12\
+    \x18\n\x07version\x18\x02\x20\x01(\tR\x07version\x12\x16\n\x06dbSize\x18\
+    \x03\x20\x01(\x03R\x06dbSize\x12\x16\n\x06leader\x18\x04\x20\x01(\x04R\
+    \x06leader\x12\x1c\n\traftIndex\x18\x05\x20\x01(\x04R\traftIndex\x12\x1a\
+    \n\x08raftTerm\x18\x06\x20\x01(\x04R\x08raftTerm\"\x13\n\x11AuthEnableRe\
+    quest\"\x14\n\x12AuthDisableRequest\"E\n\x13AuthenticateRequest\x12\x12\
+    \n\x04name\x18\x01\x20\x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\
+    \x01(\tR\x08password\"D\n\x12AuthUserAddRequest\x12\x12\n\x04name\x18\
+    \x01\x20\x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\x01(\tR\x08pa\
+    ssword\"(\n\x12AuthUserGetRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\
+    \x04name\"+\n\x15AuthUserDeleteRequest\x12\x12\n\x04name\x18\x01\x20\x01\
+    (\tR\x04name\"O\n\x1dAuthUserChangePasswordRequest\x12\x12\n\x04name\x18\
+    \x01\x20\x01(\tR\x04name\x12\x1a\n\x08password\x18\x02\x20\x01(\tR\x08pa\
+    ssword\"B\n\x18AuthUserGrantRoleRequest\x12\x12\n\x04user\x18\x01\x20\
+    \x01(\tR\x04user\x12\x12\n\x04role\x18\x02\x20\x01(\tR\x04role\"C\n\x19A\
+    uthUserRevokeRoleRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\
+    \x12\x12\n\x04role\x18\x02\x20\x01(\tR\x04role\"(\n\x12AuthRoleAddReques\
+    t\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\"(\n\x12AuthRoleGetReque\
+    st\x12\x12\n\x04role\x18\x01\x20\x01(\tR\x04role\"\x15\n\x13AuthUserList\
+    Request\"\x15\n\x13AuthRoleListRequest\"+\n\x15AuthRoleDeleteRequest\x12\
+    \x12\n\x04role\x18\x01\x20\x01(\tR\x04role\"\\\n\x1eAuthRoleGrantPermiss\
+    ionRequest\x12\x12\n\x04name\x18\x01\x20\x01(\tR\x04name\x12&\n\x04perm\
+    \x18\x02\x20\x01(\x0b2\x12.authpb.PermissionR\x04perm\"d\n\x1fAuthRoleRe\
+    vokePermissionRequest\x12\x12\n\x04role\x18\x01\x20\x01(\tR\x04role\x12\
+    \x10\n\x03key\x18\x02\x20\x01(\tR\x03key\x12\x1b\n\trange_end\x18\x03\
+    \x20\x01(\tR\x08rangeEnd\"J\n\x12AuthEnableResponse\x124\n\x06header\x18\
     \x01\x20\x01(\x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\"K\n\x13Au\
     thDisableResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverp\
     b.ResponseHeaderR\x06header\"b\n\x14AuthenticateResponse\x124\n\x06heade\
@@ -20696,96 +19709,97 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0b2\x1c.etcdserverpb.ResponseHeaderR\x06header\"X\n\x20AuthRoleRevokeP\
     ermissionResponse\x124\n\x06header\x18\x01\x20\x01(\x0b2\x1c.etcdserverp\
     b.ResponseHeaderR\x06header*/\n\tAlarmType\x12\x08\n\x04NONE\x10\0\x12\
-    \x0b\n\x07NOSPACE\x10\x01\x12\x0b\n\x07CORRUPT\x10\x022\xe4\x03\n\x02KV\
-    \x12Y\n\x05Range\x12\x1a.etcdserverpb.RangeRequest\x1a\x1b.etcdserverpb.\
-    RangeResponse\"\x17\x82\xd3\xe4\x93\x02\x11\"\x0c/v3/kv/range:\x01*\x12Q\
-    \n\x03Put\x12\x18.etcdserverpb.PutRequest\x1a\x19.etcdserverpb.PutRespon\
-    se\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/v3/kv/put:\x01*\x12q\n\x0bDeleteRan\
-    ge\x12\x20.etcdserverpb.DeleteRangeRequest\x1a!.etcdserverpb.DeleteRange\
-    Response\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/v3/kv/deleterange:\x01*\x12\
-    Q\n\x03Txn\x12\x18.etcdserverpb.TxnRequest\x1a\x19.etcdserverpb.TxnRespo\
-    nse\"\x15\x82\xd3\xe4\x93\x02\x0f\"\n/v3/kv/txn:\x01*\x12j\n\x07Compact\
-    \x12\x1f.etcdserverpb.CompactionRequest\x1a\x20.etcdserverpb.CompactionR\
-    esponse\"\x1c\x82\xd3\xe4\x93\x02\x16\"\x11/v3/kv/compaction:\x01*2c\n\
-    \x05Watch\x12Z\n\x05Watch\x12\x1a.etcdserverpb.WatchRequest\x1a\x1b.etcd\
-    serverpb.WatchResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\"\t/v3/watch:\x01*(\
-    \x010\x012\xad\x05\n\x05Lease\x12k\n\nLeaseGrant\x12\x1f.etcdserverpb.Le\
-    aseGrantRequest\x1a\x20.etcdserverpb.LeaseGrantResponse\"\x1a\x82\xd3\
-    \xe4\x93\x02\x14\"\x0f/v3/lease/grant:\x01*\x12\x89\x01\n\x0bLeaseRevoke\
-    \x12\x20.etcdserverpb.LeaseRevokeRequest\x1a!.etcdserverpb.LeaseRevokeRe\
-    sponse\"5\x82\xd3\xe4\x93\x02/\"\x10/v3/lease/revoke:\x01*Z\x18\"\x13/v3\
-    /kv/lease/revoke:\x01*\x12\x7f\n\x0eLeaseKeepAlive\x12#.etcdserverpb.Lea\
-    seKeepAliveRequest\x1a$.etcdserverpb.LeaseKeepAliveResponse\"\x1e\x82\
-    \xd3\xe4\x93\x02\x18\"\x13/v3/lease/keepalive:\x01*(\x010\x01\x12\x9d\
+    \x0b\n\x07NOSPACE\x10\x01\x12\x0b\n\x07CORRUPT\x10\x022\xf8\x03\n\x02KV\
+    \x12]\n\x05Range\x12\x1a.etcdserverpb.RangeRequest\x1a\x1b.etcdserverpb.\
+    RangeResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/v3beta/kv/range:\x01*\
+    \x12U\n\x03Put\x12\x18.etcdserverpb.PutRequest\x1a\x19.etcdserverpb.PutR\
+    esponse\"\x19\x82\xd3\xe4\x93\x02\x13\"\x0e/v3beta/kv/put:\x01*\x12u\n\
+    \x0bDeleteRange\x12\x20.etcdserverpb.DeleteRangeRequest\x1a!.etcdserverp\
+    b.DeleteRangeResponse\"!\x82\xd3\xe4\x93\x02\x1b\"\x16/v3beta/kv/deleter\
+    ange:\x01*\x12U\n\x03Txn\x12\x18.etcdserverpb.TxnRequest\x1a\x19.etcdser\
+    verpb.TxnResponse\"\x19\x82\xd3\xe4\x93\x02\x13\"\x0e/v3beta/kv/txn:\x01\
+    *\x12n\n\x07Compact\x12\x1f.etcdserverpb.CompactionRequest\x1a\x20.etcds\
+    erverpb.CompactionResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\x15/v3beta/kv\
+    /compaction:\x01*2g\n\x05Watch\x12^\n\x05Watch\x12\x1a.etcdserverpb.Watc\
+    hRequest\x1a\x1b.etcdserverpb.WatchResponse\"\x18\x82\xd3\xe4\x93\x02\
+    \x12\"\r/v3beta/watch:\x01*(\x010\x012\xf7\x04\n\x05Lease\x12o\n\nLeaseG\
+    rant\x12\x1f.etcdserverpb.LeaseGrantRequest\x1a\x20.etcdserverpb.LeaseGr\
+    antResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x13/v3beta/lease/grant:\x01*\
+    \x12v\n\x0bLeaseRevoke\x12\x20.etcdserverpb.LeaseRevokeRequest\x1a!.etcd\
+    serverpb.LeaseRevokeResponse\"\"\x82\xd3\xe4\x93\x02\x1c\"\x17/v3beta/kv\
+    /lease/revoke:\x01*\x12\x83\x01\n\x0eLeaseKeepAlive\x12#.etcdserverpb.Le\
+    aseKeepAliveRequest\x1a$.etcdserverpb.LeaseKeepAliveResponse\"\"\x82\xd3\
+    \xe4\x93\x02\x1c\"\x17/v3beta/lease/keepalive:\x01*(\x010\x01\x12\x86\
     \x01\n\x0fLeaseTimeToLive\x12$.etcdserverpb.LeaseTimeToLiveRequest\x1a%.\
-    etcdserverpb.LeaseTimeToLiveResponse\"=\x82\xd3\xe4\x93\x027\"\x14/v3/le\
-    ase/timetolive:\x01*Z\x1c\"\x17/v3/kv/lease/timetolive:\x01*\x12\x89\x01\
-    \n\x0bLeaseLeases\x12\x20.etcdserverpb.LeaseLeasesRequest\x1a!.etcdserve\
-    rpb.LeaseLeasesResponse\"5\x82\xd3\xe4\x93\x02/\"\x10/v3/lease/leases:\
-    \x01*Z\x18\"\x13/v3/kv/lease/leases:\x01*2\xe9\x03\n\x07Cluster\x12o\n\t\
-    MemberAdd\x12\x1e.etcdserverpb.MemberAddRequest\x1a\x1f.etcdserverpb.Mem\
-    berAddResponse\"!\x82\xd3\xe4\x93\x02\x1b\"\x16/v3/cluster/member/add:\
-    \x01*\x12{\n\x0cMemberRemove\x12!.etcdserverpb.MemberRemoveRequest\x1a\"\
-    .etcdserverpb.MemberRemoveResponse\"$\x82\xd3\xe4\x93\x02\x1e\"\x19/v3/c\
-    luster/member/remove:\x01*\x12{\n\x0cMemberUpdate\x12!.etcdserverpb.Memb\
-    erUpdateRequest\x1a\".etcdserverpb.MemberUpdateResponse\"$\x82\xd3\xe4\
-    \x93\x02\x1e\"\x19/v3/cluster/member/update:\x01*\x12s\n\nMemberList\x12\
-    \x1f.etcdserverpb.MemberListRequest\x1a\x20.etcdserverpb.MemberListRespo\
-    nse\"\"\x82\xd3\xe4\x93\x02\x1c\"\x17/v3/cluster/member/list:\x01*2\x8a\
-    \x06\n\x0bMaintenance\x12b\n\x05Alarm\x12\x1a.etcdserverpb.AlarmRequest\
-    \x1a\x1b.etcdserverpb.AlarmResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\x15/\
-    v3/maintenance/alarm:\x01*\x12f\n\x06Status\x12\x1b.etcdserverpb.StatusR\
-    equest\x1a\x1c.etcdserverpb.StatusResponse\"!\x82\xd3\xe4\x93\x02\x1b\"\
-    \x16/v3/maintenance/status:\x01*\x12v\n\nDefragment\x12\x1f.etcdserverpb\
-    .DefragmentRequest\x1a\x20.etcdserverpb.DefragmentResponse\"%\x82\xd3\
-    \xe4\x93\x02\x1f\"\x1a/v3/maintenance/defragment:\x01*\x12^\n\x04Hash\
-    \x12\x19.etcdserverpb.HashRequest\x1a\x1a.etcdserverpb.HashResponse\"\
-    \x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3/maintenance/hash:\x01*\x12d\n\x06H\
-    ashKV\x12\x1b.etcdserverpb.HashKVRequest\x1a\x1c.etcdserverpb.HashKVResp\
-    onse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3/maintenance/hash:\x01*\x12p\
-    \n\x08Snapshot\x12\x1d.etcdserverpb.SnapshotRequest\x1a\x1e.etcdserverpb\
-    .SnapshotResponse\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3/maintenance/snapsh\
-    ot:\x01*0\x01\x12\x7f\n\nMoveLeader\x12\x1f.etcdserverpb.MoveLeaderReque\
-    st\x1a\x20.etcdserverpb.MoveLeaderResponse\".\x82\xd3\xe4\x93\x02(\"#/v3\
-    /maintenance/transfer-leadership:\x01*2\xba\x0f\n\x04Auth\x12k\n\nAuthEn\
-    able\x12\x1f.etcdserverpb.AuthEnableRequest\x1a\x20.etcdserverpb.AuthEna\
-    bleResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\"\x0f/v3/auth/enable:\x01*\x12\
-    o\n\x0bAuthDisable\x12\x20.etcdserverpb.AuthDisableRequest\x1a!.etcdserv\
-    erpb.AuthDisableResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/v3/auth/dis\
-    able:\x01*\x12w\n\x0cAuthenticate\x12!.etcdserverpb.AuthenticateRequest\
-    \x1a\".etcdserverpb.AuthenticateResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\
-    \x15/v3/auth/authenticate:\x01*\x12l\n\x07UserAdd\x12\x20.etcdserverpb.A\
-    uthUserAddRequest\x1a!.etcdserverpb.AuthUserAddResponse\"\x1c\x82\xd3\
-    \xe4\x93\x02\x16\"\x11/v3/auth/user/add:\x01*\x12l\n\x07UserGet\x12\x20.\
-    etcdserverpb.AuthUserGetRequest\x1a!.etcdserverpb.AuthUserGetResponse\"\
-    \x1c\x82\xd3\xe4\x93\x02\x16\"\x11/v3/auth/user/get:\x01*\x12p\n\x08User\
-    List\x12!.etcdserverpb.AuthUserListRequest\x1a\".etcdserverpb.AuthUserLi\
-    stResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/v3/auth/user/list:\x01*\
-    \x12x\n\nUserDelete\x12#.etcdserverpb.AuthUserDeleteRequest\x1a$.etcdser\
-    verpb.AuthUserDeleteResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3/auth\
-    /user/delete:\x01*\x12\x92\x01\n\x12UserChangePassword\x12+.etcdserverpb\
-    .AuthUserChangePasswordRequest\x1a,.etcdserverpb.AuthUserChangePasswordR\
-    esponse\"!\x82\xd3\xe4\x93\x02\x1b\"\x16/v3/auth/user/changepw:\x01*\x12\
-    \x80\x01\n\rUserGrantRole\x12&.etcdserverpb.AuthUserGrantRoleRequest\x1a\
-    '.etcdserverpb.AuthUserGrantRoleResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\"\
-    \x13/v3/auth/user/grant:\x01*\x12\x84\x01\n\x0eUserRevokeRole\x12'.etcds\
-    erverpb.AuthUserRevokeRoleRequest\x1a(.etcdserverpb.AuthUserRevokeRoleRe\
-    sponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3/auth/user/revoke:\x01*\x12\
-    l\n\x07RoleAdd\x12\x20.etcdserverpb.AuthRoleAddRequest\x1a!.etcdserverpb\
-    .AuthRoleAddResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\"\x11/v3/auth/role/ad\
-    d:\x01*\x12l\n\x07RoleGet\x12\x20.etcdserverpb.AuthRoleGetRequest\x1a!.e\
-    tcdserverpb.AuthRoleGetResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\"\x11/v3/a\
-    uth/role/get:\x01*\x12p\n\x08RoleList\x12!.etcdserverpb.AuthRoleListRequ\
-    est\x1a\".etcdserverpb.AuthRoleListResponse\"\x1d\x82\xd3\xe4\x93\x02\
-    \x17\"\x12/v3/auth/role/list:\x01*\x12x\n\nRoleDelete\x12#.etcdserverpb.\
-    AuthRoleDeleteRequest\x1a$.etcdserverpb.AuthRoleDeleteResponse\"\x1f\x82\
-    \xd3\xe4\x93\x02\x19\"\x14/v3/auth/role/delete:\x01*\x12\x92\x01\n\x13Ro\
-    leGrantPermission\x12,.etcdserverpb.AuthRoleGrantPermissionRequest\x1a-.\
-    etcdserverpb.AuthRoleGrantPermissionResponse\"\x1e\x82\xd3\xe4\x93\x02\
-    \x18\"\x13/v3/auth/role/grant:\x01*\x12\x96\x01\n\x14RoleRevokePermissio\
-    n\x12-.etcdserverpb.AuthRoleRevokePermissionRequest\x1a..etcdserverpb.Au\
-    thRoleRevokePermissionResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3/au\
-    th/role/revoke:\x01*B\x08\xd0\xe2\x1e\x01\xc8\xe2\x1e\x01b\x06proto3\
+    etcdserverpb.LeaseTimeToLiveResponse\"&\x82\xd3\xe4\x93\x02\x20\"\x1b/v3\
+    beta/kv/lease/timetolive:\x01*\x12v\n\x0bLeaseLeases\x12\x20.etcdserverp\
+    b.LeaseLeasesRequest\x1a!.etcdserverpb.LeaseLeasesResponse\"\"\x82\xd3\
+    \xe4\x93\x02\x1c\"\x17/v3beta/kv/lease/leases:\x01*2\xf9\x03\n\x07Cluste\
+    r\x12s\n\tMemberAdd\x12\x1e.etcdserverpb.MemberAddRequest\x1a\x1f.etcdse\
+    rverpb.MemberAddResponse\"%\x82\xd3\xe4\x93\x02\x1f\"\x1a/v3beta/cluster\
+    /member/add:\x01*\x12\x7f\n\x0cMemberRemove\x12!.etcdserverpb.MemberRemo\
+    veRequest\x1a\".etcdserverpb.MemberRemoveResponse\"(\x82\xd3\xe4\x93\x02\
+    \"\"\x1d/v3beta/cluster/member/remove:\x01*\x12\x7f\n\x0cMemberUpdate\
+    \x12!.etcdserverpb.MemberUpdateRequest\x1a\".etcdserverpb.MemberUpdateRe\
+    sponse\"(\x82\xd3\xe4\x93\x02\"\"\x1d/v3beta/cluster/member/update:\x01*\
+    \x12w\n\nMemberList\x12\x1f.etcdserverpb.MemberListRequest\x1a\x20.etcds\
+    erverpb.MemberListResponse\"&\x82\xd3\xe4\x93\x02\x20\"\x1b/v3beta/clust\
+    er/member/list:\x01*2\xa7\x06\n\x0bMaintenance\x12f\n\x05Alarm\x12\x1a.e\
+    tcdserverpb.AlarmRequest\x1a\x1b.etcdserverpb.AlarmResponse\"$\x82\xd3\
+    \xe4\x93\x02\x1e\"\x19/v3beta/maintenance/alarm:\x01*\x12j\n\x06Status\
+    \x12\x1b.etcdserverpb.StatusRequest\x1a\x1c.etcdserverpb.StatusResponse\
+    \"%\x82\xd3\xe4\x93\x02\x1f\"\x1a/v3beta/maintenance/status:\x01*\x12z\n\
+    \nDefragment\x12\x1f.etcdserverpb.DefragmentRequest\x1a\x20.etcdserverpb\
+    .DefragmentResponse\")\x82\xd3\xe4\x93\x02#\"\x1e/v3beta/maintenance/def\
+    ragment:\x01*\x12b\n\x04Hash\x12\x19.etcdserverpb.HashRequest\x1a\x1a.et\
+    cdserverpb.HashResponse\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3beta/maintena\
+    nce/hash:\x01*\x12h\n\x06HashKV\x12\x1b.etcdserverpb.HashKVRequest\x1a\
+    \x1c.etcdserverpb.HashKVResponse\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3beta\
+    /maintenance/hash:\x01*\x12t\n\x08Snapshot\x12\x1d.etcdserverpb.Snapshot\
+    Request\x1a\x1e.etcdserverpb.SnapshotResponse\"'\x82\xd3\xe4\x93\x02!\"\
+    \x1c/v3beta/maintenance/snapshot:\x01*0\x01\x12\x83\x01\n\nMoveLeader\
+    \x12\x1f.etcdserverpb.MoveLeaderRequest\x1a\x20.etcdserverpb.MoveLeaderR\
+    esponse\"2\x82\xd3\xe4\x93\x02,\"'/v3beta/maintenance/transfer-leadershi\
+    p:\x01*2\xfa\x0f\n\x04Auth\x12o\n\nAuthEnable\x12\x1f.etcdserverpb.AuthE\
+    nableRequest\x1a\x20.etcdserverpb.AuthEnableResponse\"\x1e\x82\xd3\xe4\
+    \x93\x02\x18\"\x13/v3beta/auth/enable:\x01*\x12s\n\x0bAuthDisable\x12\
+    \x20.etcdserverpb.AuthDisableRequest\x1a!.etcdserverpb.AuthDisableRespon\
+    se\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/v3beta/auth/disable:\x01*\x12{\n\
+    \x0cAuthenticate\x12!.etcdserverpb.AuthenticateRequest\x1a\".etcdserverp\
+    b.AuthenticateResponse\"$\x82\xd3\xe4\x93\x02\x1e\"\x19/v3beta/auth/auth\
+    enticate:\x01*\x12p\n\x07UserAdd\x12\x20.etcdserverpb.AuthUserAddRequest\
+    \x1a!.etcdserverpb.AuthUserAddResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\
+    \x15/v3beta/auth/user/add:\x01*\x12p\n\x07UserGet\x12\x20.etcdserverpb.A\
+    uthUserGetRequest\x1a!.etcdserverpb.AuthUserGetResponse\"\x20\x82\xd3\
+    \xe4\x93\x02\x1a\"\x15/v3beta/auth/user/get:\x01*\x12t\n\x08UserList\x12\
+    !.etcdserverpb.AuthUserListRequest\x1a\".etcdserverpb.AuthUserListRespon\
+    se\"!\x82\xd3\xe4\x93\x02\x1b\"\x16/v3beta/auth/user/list:\x01*\x12|\n\n\
+    UserDelete\x12#.etcdserverpb.AuthUserDeleteRequest\x1a$.etcdserverpb.Aut\
+    hUserDeleteResponse\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3beta/auth/user/de\
+    lete:\x01*\x12\x96\x01\n\x12UserChangePassword\x12+.etcdserverpb.AuthUse\
+    rChangePasswordRequest\x1a,.etcdserverpb.AuthUserChangePasswordResponse\
+    \"%\x82\xd3\xe4\x93\x02\x1f\"\x1a/v3beta/auth/user/changepw:\x01*\x12\
+    \x84\x01\n\rUserGrantRole\x12&.etcdserverpb.AuthUserGrantRoleRequest\x1a\
+    '.etcdserverpb.AuthUserGrantRoleResponse\"\"\x82\xd3\xe4\x93\x02\x1c\"\
+    \x17/v3beta/auth/user/grant:\x01*\x12\x88\x01\n\x0eUserRevokeRole\x12'.e\
+    tcdserverpb.AuthUserRevokeRoleRequest\x1a(.etcdserverpb.AuthUserRevokeRo\
+    leResponse\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3beta/auth/user/revoke:\x01\
+    *\x12p\n\x07RoleAdd\x12\x20.etcdserverpb.AuthRoleAddRequest\x1a!.etcdser\
+    verpb.AuthRoleAddResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\x15/v3beta/aut\
+    h/role/add:\x01*\x12p\n\x07RoleGet\x12\x20.etcdserverpb.AuthRoleGetReque\
+    st\x1a!.etcdserverpb.AuthRoleGetResponse\"\x20\x82\xd3\xe4\x93\x02\x1a\"\
+    \x15/v3beta/auth/role/get:\x01*\x12t\n\x08RoleList\x12!.etcdserverpb.Aut\
+    hRoleListRequest\x1a\".etcdserverpb.AuthRoleListResponse\"!\x82\xd3\xe4\
+    \x93\x02\x1b\"\x16/v3beta/auth/role/list:\x01*\x12|\n\nRoleDelete\x12#.e\
+    tcdserverpb.AuthRoleDeleteRequest\x1a$.etcdserverpb.AuthRoleDeleteRespon\
+    se\"#\x82\xd3\xe4\x93\x02\x1d\"\x18/v3beta/auth/role/delete:\x01*\x12\
+    \x96\x01\n\x13RoleGrantPermission\x12,.etcdserverpb.AuthRoleGrantPermiss\
+    ionRequest\x1a-.etcdserverpb.AuthRoleGrantPermissionResponse\"\"\x82\xd3\
+    \xe4\x93\x02\x1c\"\x17/v3beta/auth/role/grant:\x01*\x12\x9a\x01\n\x14Rol\
+    eRevokePermission\x12-.etcdserverpb.AuthRoleRevokePermissionRequest\x1a.\
+    .etcdserverpb.AuthRoleRevokePermissionResponse\"#\x82\xd3\xe4\x93\x02\
+    \x1d\"\x18/v3beta/auth/role/revoke:\x01*B\x08\xd0\xe2\x1e\x01\xc8\xe2\
+    \x1e\x01b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

@@ -1,6 +1,9 @@
 use crate::errors::Error;
-use crate::rpc::{LeaseGrantRequest, LeaseGrantResponse, LeaseRevokeRequest, LeaseRevokeResponse};
-use crate::rpc_grpc::{Lease as LeaseTrait, LeaseClient};
+use crate::v3::rpc::{
+    LeaseGrantRequest, LeaseGrantResponse, LeaseKeepAliveRequest, LeaseKeepAliveResponse,
+    LeaseRevokeRequest, LeaseRevokeResponse,
+};
+use crate::v3::rpc_grpc::{Lease as LeaseTrait, LeaseClient};
 use futures::Future;
 use grpc::ClientStub;
 use grpc::RequestOptions;
@@ -9,6 +12,8 @@ use std::sync::Arc;
 pub struct Lease {
     pub client: Arc<grpc::Client>,
     pub lease_id: i64,
+    lease_client: LeaseClient,
+    pub ttl: i64,
 }
 
 impl Lease {
@@ -23,6 +28,8 @@ impl Lease {
                 Ok(Lease {
                     client: client.clone(),
                     lease_id: response.ID,
+                    lease_client: LeaseClient::with_client(client),
+                    ttl: response.TTL,
                 })
             }
         })
@@ -45,7 +52,7 @@ impl Lease {
 
     fn revoke_lease(
         lease_id: i64,
-        lease_client: LeaseClient,
+        lease_client: &LeaseClient,
     ) -> impl Future<Item = LeaseRevokeResponse, Error = Error> {
         let request_options = RequestOptions::new();
         let mut lease_revoke_request = LeaseRevokeRequest::new();
@@ -57,15 +64,33 @@ impl Lease {
     }
 }
 
+impl Lease {
+    pub fn keep_alive<S>(
+        &self,
+        keep_alive_requests: S,
+    ) -> grpc::StreamingResponse<LeaseKeepAliveResponse>
+    where
+        S: futures::Stream<Item = LeaseKeepAliveRequest, Error = grpc::Error> + Send + 'static,
+    {
+        self.lease_client.lease_keep_alive(
+            RequestOptions::new(),
+            grpc::StreamingRequest::new(keep_alive_requests),
+        )
+    }
+}
+
 impl Drop for Lease {
     fn drop(&mut self) {
-        trace!("Dropping lease...");
+        debug!("Dropping lease with id: {}", self.lease_id);
 
-        let lease_client = LeaseClient::with_client(self.client.clone());
-        let _ = Self::revoke_lease(self.lease_id, lease_client).map_err(|error| {
-            error!("Could not revoke lease: {}", error);
-
-            error
-        });
+        match Self::revoke_lease(self.lease_id, &self.lease_client).wait() {
+            Ok(_) => {}
+            Err(e) => {
+                error!(
+                    "Could not revoke lease: {}, with ttl: {}. {}",
+                    self.lease_id, self.ttl, e
+                );
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ fn main() {
     let src_dir = home_dir.join("golang/src/github.com");
 
     protoc_rust_grpc::run(protoc_rust_grpc::Args {
-        out_dir: "src",
+        out_dir: "src/v3",
         includes: &[
             src_dir.join("gogo/protobuf").to_str().expect("path"),
             src_dir.join("etcd-io").to_str().expect("path"),
@@ -34,6 +34,10 @@ fn main() {
                 .expect("path"),
             src_dir
                 .join("etcd-io/etcd/auth/authpb/auth.proto")
+                .to_str()
+                .expect("path"),
+            src_dir
+                .join("etcd-io/etcd/etcdserver/api/v3election/v3electionpb/v3election.proto")
                 .to_str()
                 .expect("path"),
         ],
