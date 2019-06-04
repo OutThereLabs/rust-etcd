@@ -1,7 +1,9 @@
 use crate::errors::Error;
 use crate::lease::Lease;
-use crate::v3lock::{LockRequest as GrpcLockRequest, LockResponse, UnlockRequest, UnlockResponse};
-use crate::v3lock_grpc::{Lock as LockTrait, LockClient};
+use crate::v3::v3lock::{
+    LockRequest as GrpcLockRequest, LockResponse, UnlockRequest, UnlockResponse,
+};
+use crate::v3::v3lock_grpc::{Lock as LockTrait, LockClient};
 use futures::Future;
 use grpc::ClientStub;
 use grpc::RequestOptions;

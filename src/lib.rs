@@ -4,17 +4,17 @@ extern crate failure;
 extern crate log;
 extern crate grpc;
 
-mod auth;
+#[cfg(feature = "actix")]
+mod concurrency;
 mod errors;
-mod etcdserver;
-mod kv;
 mod lease;
 mod lock;
-mod rpc;
-mod rpc_grpc;
-mod v3lock;
-mod v3lock_grpc;
+pub mod v3;
 
+#[cfg(feature = "actix")]
+pub use self::concurrency::election::{ElectionCandidate, ElectionState, ElectionStateSubscribe};
+#[cfg(feature = "actix")]
+pub use self::concurrency::session::{SessionManager, SessionManagerState, SubscribeSessionState};
 pub use self::errors::Error;
 pub use self::lease::Lease;
 pub use self::lock::Lock;
